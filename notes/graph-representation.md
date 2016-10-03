@@ -22,7 +22,8 @@ Today, we're going to review all about data structures.
 OoohhhhoooOOOhhhh, **soo** exciting? Right?
 
 Yeah, data structures are usually not a fun topic out there, but they are
-important. Not just to pass this class, but in order to be better software engineer.
+important. Not just to pass this class, but in order to be a better software
+engineer.
 
 For example, knowing data structure can help you to:
 
@@ -281,7 +282,11 @@ class Graph {
 
 Reference on the data structure overview: https://github.com/thejameskyle/itsy-bitsy-data-structures/blob/master/itsy-bitsy-data-structures.js
 
+That is enough of the data structure and why we need to learn them.
+
 ### Graph Components
+
+We want to talk about graph and understand the different terminologies of Graph
 
 ![](imgs/graph_diagram.png)
 
@@ -289,52 +294,72 @@ Reference on the data structure overview: https://github.com/thejameskyle/itsy-b
 * Edge
 * Graph
 
+Always, node will hold some values (can be a simple String, Integer, or custom
+data). But doesn't matter what data a node is holding, node is node and edge is
+edge. And Graph will contain nodes and edges with their relationships.
+
 ### Methods
 
-* Add Node
-* Add Line between nodes
+When using graph as data structure, there are some common methods in graph.
+
+* Add/remove node
+* Add/remove edge between nodes
+* Find node (if there is any)
 * Adjacent
 * Neighbors
+* Distance
 
 ### Examples
+
+Why do we need to learn all about Graph again? How is this useful to us?
+
+Graph can be used for many different cases:
 
 * Social network
 * Map/city (locations)
 * Game States
-* Many more depends on how abstract you can get
+* More depends on how abstract you can get
 
 ### Types of Graphs
 
+![](imgs/graph-tree.png)
+
+Graph has different types such as below:
+
 * Directed/Undirected
+  * ![](imgs/graph-direct.png)
 * Weighted
+  * ![](imgs/graph-weight.png)
 * Dense/Sparse
 
 > Dense graph: graph has a lot more edges than vertices (defined as `|E| = O(|V|)` where |E| is number of edges and |V| is number of vertices)  
 > Sparse graph: graph has relative fewer edges than vertices (defined as `|E| = Θ(|V^2|)`)
 
-![](imgs/graph-tree.png)
-![](imgs/graph-direct.png)
-![](imgs/graph-weight.png)
-
 ### Graph as Abstract Data Structure
+
+Like data structures, within graph as data structure. We also have different
+data structure to implement graph and of course different algorithms to implement
+each method accordingly.
 
 #### 3 ways to represent graph in programming
 
+There are usually 3 common ways to represent graph internally
+
 1. Adjacency Matrix
+  * ![](imgs/adjacency-matrix-undirect.png)
 2. Adjacency List
+  * ![](imgs/adjacency-list.png)
 3. Object Oriented (objects and pointers)
-
-![](imgs/adjacency-matrix-undirect.png)
-![](imgs/adjacency-list.png)
-
-> With the complexity analysis below, be sure to know pros and cons for each one
 
 #### Complexity Analysis
 
-| | Adjacency List | Adjacency Matrix | Object Oriented |
-| -- | -- | -- | -- |
+Same as data structure, each representation is better at *something*. Best way to
+analyze the use case for each representation is by Big-O Notations:
+
+| \ | Adjacency List | Adjacency Matrix | Object Oriented |
+| :-- | :-- | :-- | :-- |
 | Store graph | O(&#124;V&#124; + &#124;E&#124;) | O(&#124;V&#124;<sup>2</sup>) | Depends |
-| Add vertex | O(1)| O(&#124;V&#124;<sup>2</sup>) | Depends |
+| Add vertex | O(1) | O(&#124;V&#124;<sup>2</sup>) | Depends |
 | Add edge | O(1) | O(1) | Depends |
 | Remove vertex | O(&#124;E&#124;) | O(&#124;V&#124;<sup>2</sup>) | Depends |
 | Remove edge | O(&#124;E&#124;) | O(1) | Depends |
@@ -343,16 +368,14 @@ Reference on the data structure overview: https://github.com/thejameskyle/itsy-b
 
 Reference: [Wikipedia - Abstract data structure][wiki-graph]
 
-### Graph Traversal Algorithms Overview
+## Further Learning
 
-* **Breadth First Search** (BFS)
-* **Depth First Search** (DFS)
-* A-star
-* Dijkstra
-* Alpha-beta
-* Min-max
+### [Test-Driven-Development][tdd]
 
-## Learning
+1. Write test
+2. Fail and cry
+3. Fix
+4. Rinse and repeat
 
 ### [Design Pattern][design-pattern] in action
 
@@ -361,8 +384,6 @@ Reference: [Wikipedia - Abstract data structure][wiki-graph]
 
 ### [Homework 1](homeworks/homework1.md)
 
-Finish remaining code for graph package
-
-
 [wiki-graph]: https://en.wikipedia.org/wiki/Graph_(abstract_data_type)
 [design-pattern]: https://github.com/iluwatar/java-design-patterns
+[tdd]: http://agiledata.org/essays/tdd.html
