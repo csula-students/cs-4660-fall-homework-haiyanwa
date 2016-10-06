@@ -5,6 +5,8 @@ import csula.cs4660.graphs.Graph;
 import csula.cs4660.graphs.Node;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,28 +15,19 @@ import java.util.Queue;
 
 /**
  * Created by eric on 9/24/16.
+ * implemeted by haiyan on 10/06/16
  */
 public class BFS implements SearchStrategy {
 	
 	private Queue<Node> queue = new LinkedList<Node>();
 	private List<Edge> result = new ArrayList<>();
 	private Node endTile = null;
-	//Map<childNode, parentNode>
+	
+	//Map<childNode, parentNode> shows child-parent relationship
 	private Map<Node,Node> relation = new HashMap<>();
 	private Map<Node,Integer> distance = new HashMap<>();
-	ArrayList<Node> visitlist = new ArrayList<>();
 	
 	public boolean visited(Node n){
-		for(int i=0;i<visitlist.size();i++){
-			if(visitlist.get(i).equals(n)){
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	public boolean visit(Node n){
 		if(distance.get(n) != null ){
 			return true;
 		}
@@ -53,25 +46,31 @@ public class BFS implements SearchStrategy {
     		Node current = queue.poll();
     		
     		for(Node n : graph.neighbors(current)){
-    			
-    			visitlist.add(n);
-    			
-    			int dis = distance.get(current) + graph.distance(current, n);
-    			//count distance from source
-    			distance.put(n, dis);
-    			relation.put(n, current);
-    			if(n.equals(dist)){
-    				endTile = n;
-    				//break;
+    			if(!visited(n)){
+        			
+        			int dis = distance.get(current) + graph.distance(current, n);
+        			//count distance from source
+        			distance.put(n, dis);
+        			relation.put(n, current);
+        			if(n.equals(dist)){
+        				endTile = n;
+        				//break;
+        			}
+        			queue.add(n);
     			}
-    			
-    			queue.add(n);
     		}
-    		
     	}
     	while(relation.get(endTile) != null){
     		Node parent = relation.get(endTile);
     		result.add(new Edge(parent, endTile, graph.distance(parent,endTile)));
+    		//
+    		endTile = parent;
+    	}
+    	
+    	if(result != null){
+    		
+    		Collections.reverse(result);
+    		return result;
     	}
     	
         return null;
