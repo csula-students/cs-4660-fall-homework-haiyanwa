@@ -26,6 +26,7 @@ public class AdjacencyMatrix implements Representation {
     		ArrayList<String> arr = readFile(file);
     		Node fromNode;
     		Node toNode;
+    		int value;
     		
     		//first record is total node number
     		try{
@@ -68,13 +69,14 @@ public class AdjacencyMatrix implements Representation {
         			
     				fromNode = new Node(Integer.parseInt(s[0]));
     				toNode = new Node(Integer.parseInt(s[1]));
+    				value = Integer.parseInt(s[1]);
     				
     				//System.out.println("[" + fromNode.getData() + "][" + toNode.getData() + "]" +  Integer.parseInt(s[2]));
         			
     				//get node index
         			int fnode_index = GetNodeIndex(fromNode);
         			int tnode_index = GetNodeIndex(toNode);
-        			adjacencyMatrix[fnode_index][tnode_index] = 1;
+        			adjacencyMatrix[fnode_index][tnode_index] = value;
         		}
         		
         		//System.out.println("matrix: ");
@@ -172,7 +174,7 @@ public class AdjacencyMatrix implements Representation {
     	int num = nodes.length + 1;
     	//node exists
     	if(GetNodeIndex(x) != -1){
-    		System.out.println("Error: this node exists already");
+    		//System.out.println("Error: this node exists already");
     		
     	}else{
     		
@@ -281,7 +283,7 @@ public class AdjacencyMatrix implements Representation {
     		return true;
 
     	}else{
-    		System.out.println("Error: this node does not exist");
+    		//System.out.println("Error: this node does not exist");
     	}
         return false;
     }
@@ -301,7 +303,7 @@ public class AdjacencyMatrix implements Representation {
             	    adjacencyMatrix[index_f][index_t] = 1;
             	    return true;
             	}else{
-            		System.out.println("Error: this edge exists already!");
+            		//System.out.println("Error: this edge exists already!");
             	}
             	
             }else{
@@ -312,7 +314,7 @@ public class AdjacencyMatrix implements Representation {
             	return true;
             }
         }else{
-        	System.out.println("Error: fromNode does not exists or has been removed!");
+        	//System.out.println("Error: fromNode does not exists or has been removed!");
         }
         
         return false;
@@ -324,9 +326,9 @@ public class AdjacencyMatrix implements Representation {
         int t = GetNodeIndex(x.getTo());
         
     	if((adjacencyMatrix[f] == null) ||(adjacencyMatrix[t] == null) ){
-    		System.out.println("Error: fromNode or toNode doesn't exist");
+    		//System.out.println("Error: fromNode or toNode doesn't exist");
     	}else if(adjacencyMatrix[f][t] == 0){
-    		System.out.println("Error: This edge does not exist");
+    		//System.out.println("Error: This edge does not exist");
     		return false;
     	}else{
     		adjacencyMatrix[f][t] = 0;
@@ -338,12 +340,12 @@ public class AdjacencyMatrix implements Representation {
 
     @Override
     public int distance(Node from, Node to) {
-    	int f = (int)from.getData();
-    	int t = (int)to.getData();
+    	int f = GetNodeIndex(from);
+        int t = GetNodeIndex(to);
     	if((adjacencyMatrix[f] == null) ||(adjacencyMatrix[t] == null) ){
-    		System.out.println("Error: fromNode or toNode doesn't exist");
+    		//System.out.println("Error: fromNode or toNode doesn't exist");
     	}else{
-    		return 1;
+    		return adjacencyMatrix[f][t];
     	}
         return 0;
     }
