@@ -69,7 +69,7 @@ public class AdjacencyMatrix implements Representation {
         			
     				fromNode = new Node(Integer.parseInt(s[0]));
     				toNode = new Node(Integer.parseInt(s[1]));
-    				value = Integer.parseInt(s[1]);
+    				value = Integer.parseInt(s[2]);
     				
     				//System.out.println("[" + fromNode.getData() + "][" + toNode.getData() + "]" +  Integer.parseInt(s[2]));
         			
