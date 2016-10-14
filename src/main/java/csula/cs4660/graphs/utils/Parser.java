@@ -121,6 +121,29 @@ public class Parser {
 
     public static String converEdgesToAction(Collection<Edge> edges) {
         // TODO: convert a list of edges to a list of action
+    	String move = "";
+    	for(Edge ed : edges){
+    		Tile t_from = (Tile) ed.getFrom().getData();
+    		Tile t_to = (Tile) ed.getTo().getData();
+    		
+    		int x_from = t_from.getX();
+    		int y_from = t_from.getY();
+    		int x_to = t_to.getX();
+    		int y_to = t_to.getY();
+    		
+    		if(x_from - x_to == -1){
+    			move += "W";
+    		}else if(x_from - x_to == 1){
+    			move = "E";
+    		}else if(y_from - y_to == -1){
+    			move = "N";
+    		}else if(y_from - y_to == 1){
+    			move = "S";
+    		}
+    	}
+    	if(!move.equals("")){
+    		return move;
+    	}
         return "";
     }
 }
