@@ -26,7 +26,7 @@ import javax.swing.text.html.HTMLDocument.Iterator;
 public class AdjacencyList implements Representation {
     private Map<Node, Collection<Edge>> adjacencyList;
     //use Map for AdjacencyList, node id as key, value is a ArrayList which contains
-    //all edges direcly connected to this node and their weights
+    //all edges directly connected to this node and their weights
     
     public AdjacencyList(File file) {
     	try{
@@ -93,7 +93,8 @@ public class AdjacencyList implements Representation {
     }
 
     public AdjacencyList() {
-
+    	
+    	adjacencyList = new HashMap<Node, Collection<Edge>>();
     }
     
     //read a file in and return a String array which contains each line of the file
@@ -147,13 +148,20 @@ public class AdjacencyList implements Representation {
     @Override
     public boolean addNode(Node x) {
     	//if x is not a key, then add it as a key, while value as a empty ArrayList
-    	if(!adjacencyList.containsKey(x)){
+    	if(adjacencyList != null){
+    		if(!adjacencyList.containsKey(x)){
+        		ArrayList<Edge> arr = new ArrayList<Edge>();
+        		adjacencyList.put(x, arr);
+        		return true;
+        	}else{
+        		//System.out.println("Error: This node exists already!");
+        	}
+    	}else{
     		ArrayList<Edge> arr = new ArrayList<Edge>();
     		adjacencyList.put(x, arr);
     		return true;
-    	}else{
-    		//System.out.println("Error: This node exists already!");
     	}
+    	
         return false;
     }
 
