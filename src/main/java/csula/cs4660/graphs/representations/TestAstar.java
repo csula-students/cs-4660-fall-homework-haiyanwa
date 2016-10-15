@@ -14,8 +14,10 @@ public class TestAstar {
 	
 	public static void main(String[] args) {
 		
-		String file1 = "src/csula/cs4660/graphs/test/grid-1.txt";
-		String file2 = "src/csula/cs4660/graphs/test/grid-2.txt";
+		//String file1 = "src/csula/cs4660/graphs/test/grid-1.txt";
+		//String file1 = "src/csula/cs4660/graphs/test/grid-1.txt";
+		String file1 = "src/test/resources/homework-2/grid-1.txt";
+		String file2 = "src/test/resources/homework-2/grid-2.txt";
 		
 		
 		File file_1 = new File(file1);

@@ -102,17 +102,20 @@ public class AdjacencyMatrix implements Representation {
     public int GetNodeIndex(Node node){
     	//when return -1 means this node is not found in nodes
     	int index = -1;
-    	if(nodes.length != 0){
-    		for(int i=0; i< nodes.length; i++){
-    			//System.out.println("i=" + i);
-    			if(nodes[i] == null){
-    				return -1;
-    			}else if(nodes[i].equals(node)){
-        			return i;
-        		}
+    	if(nodes != null){
+    		if(nodes.length != 0){
+        		for(int i=0; i< nodes.length; i++){
+        			//System.out.println("i=" + i);
+        			if(nodes[i] == null){
+        				return -1;
+        			}else if(nodes[i].equals(node)){
+            			return i;
+            		}
+            	}
         	}
+    	}else{
+    		return -1;
     	}
-    	
     	return -1;
     }
    
@@ -145,6 +148,9 @@ public class AdjacencyMatrix implements Representation {
     @Override
     public List<Node> neighbors(Node x) {
     	int index_x = GetNodeIndex(x);
+    	if(index_x < 0){
+    		return null;
+    	}
     	ArrayList<Node> node_arr = new ArrayList<>();
     	for(int i=0;i<adjacencyMatrix[index_x].length;i++){
     		if(adjacencyMatrix[index_x][i] > 0){
@@ -173,58 +179,68 @@ public class AdjacencyMatrix implements Representation {
     
     @Override
     public boolean addNode(Node x) {
+    	int num = 0;
     	//new matrix length
-    	int num = nodes.length + 1;
-    	//node exists
-    	if(GetNodeIndex(x) != -1){
-    		//System.out.println("Error: this node exists already");
-    		
-    	}else{
-    		
-    		//add x to nodes
-        	Node[] newNode = new Node[num];
-    		int[][] newMatrix = new int[num][num];
-    		
-    		for(int i=0;i<nodes.length;i++){
-    			newNode[i] = nodes[i];
-    		}
-    		
-    		//add node x to the last element
-    		newNode[num-1] = new Node(x.getData());
-    		nodes = new Node[num];
-    		System.arraycopy(newNode, 0, nodes, 0, num);
-    		//for(int i=0;i<nodes.length;i++){
-    			//System.out.println(i + " " + nodes[i].getData());
-    		//}
-    		
-    		//get new index
-    		int index = GetNodeIndex(x);
-    		
-    		//add to matrix
-    		for(int i=0; i<adjacencyMatrix.length; i++){
-    			for(int j=0; j<adjacencyMatrix.length; j++){
-    				//copy from old matrix to new
-        			newMatrix[i][j] = adjacencyMatrix[i][j];
+    	if(nodes != null){
+    		num = nodes.length + 1;
+    		System.out.println("add node" +num);
+    		//the node is new
+    		if(GetNodeIndex(x) == -1){
+    			//add x to nodes
+            	Node[] newNode = new Node[num];
+        		int[][] newMatrix = new int[num][num];
+        		
+        		for(int i=0;i<nodes.length;i++){
+        			newNode[i] = nodes[i];
         		}
-    			//new col (n-1) is the index of the last element
-    			newMatrix[i][num-1] = 0;
+        		
+        		//add node x to the last element
+        		newNode[num-1] = new Node(x.getData());
+        		nodes = new Node[num];
+        		System.arraycopy(newNode, 0, nodes, 0, num);
+        		//for(int i=0;i<nodes.length;i++){
+        			//System.out.println(i + " " + nodes[i].getData());
+        		//}
+        		
+        		//get new index
+        		int index = GetNodeIndex(x);
+        		
+        		//add to matrix
+        		for(int i=0; i<adjacencyMatrix.length; i++){
+        			for(int j=0; j<adjacencyMatrix.length; j++){
+        				//copy from old matrix to new
+            			newMatrix[i][j] = adjacencyMatrix[i][j];
+            		}
+        			//new col (n-1) is the index of the last element
+        			newMatrix[i][num-1] = 0;
+        		}
+        		for(int i=0;i<num;i++){
+        			newMatrix[num-1][i] = 0;
+        		}
+        		adjacencyMatrix = new int[num][num];
+        		//copy back to adjacencyMatrix
+        		System.arraycopy(newMatrix, 0, adjacencyMatrix, 0, num);
+        		//debug
+        		//System.out.println("matrix: ");
+        		//for(int j=0;j<num;j++){
+    				//for(int k=0;k<num;k++){
+    					//System.out.print( adjacencyMatrix[j][k] + " ");
+    				//}
+    				//System.out.println();
+    			//}
+        		return true;
     		}
-    		for(int i=0;i<num;i++){
-    			newMatrix[num-1][i] = 0;
-    		}
-    		adjacencyMatrix = new int[num][num];
-    		//copy back to adjacencyMatrix
-    		System.arraycopy(newMatrix, 0, adjacencyMatrix, 0, num);
-    		//debug
-    		//System.out.println("matrix: ");
-    		//for(int j=0;j<num;j++){
-				//for(int k=0;k<num;k++){
-					//System.out.print( adjacencyMatrix[j][k] + " ");
-				//}
-				//System.out.println();
-			//}
-    		return true;
+    		
+    	//the very first node	
+    	}else{
+    		Node[] nodes = new Node[1];
+    	    int[][] adjacencyMatrix = new int[1][1];
+    	    nodes[0] = new Node(x.getData());
+    	    System.out.println("add node" +1);
+    	    adjacencyMatrix[0][0] = 0;
+    	    return true;
     	}
+    	
         return false;
     }
 
@@ -296,30 +312,32 @@ public class AdjacencyMatrix implements Representation {
     	
         int index_f = GetNodeIndex(x.getFrom());
         int index_t = GetNodeIndex(x.getTo());
-    	
-        //check if the fromNode exists or not, if not return error
-        if((adjacencyMatrix[index_f] != null)||(adjacencyMatrix[index_f][0]==-1)){
-        	//check if toNode exists or not
-        	//if exists then add 1 to the matrix
-            if(adjacencyMatrix[index_t] != null){
-            	if(adjacencyMatrix[index_f][index_t] == 0){
-            	    adjacencyMatrix[index_f][index_t] = 1;
-            	    return true;
-            	}else{
-            		//System.out.println("Error: this edge exists already!");
-            	}
-            	
-            }else{
-            	//when toNode not existing, then add toNode and 1 to the matrix
-            	this.addNode(x.getTo());
-            	index_t = GetNodeIndex(x.getTo());
-            	adjacencyMatrix[index_f][index_t] = 1;
-            	return true;
-            }
+        if((index_f==-1)||(index_t==-1)){
+        	return false;
         }else{
-        	//System.out.println("Error: fromNode does not exists or has been removed!");
+        	//check if the fromNode exists or not, if not return error
+            if((adjacencyMatrix[index_f] != null)||(adjacencyMatrix[index_f][0]==-1)){
+            	//check if toNode exists or not
+            	//if exists then add 1 to the matrix
+                if(adjacencyMatrix[index_t] != null){
+                	if(adjacencyMatrix[index_f][index_t] == 0){
+                	    adjacencyMatrix[index_f][index_t] = 1;
+                	    return true;
+                	}else{
+                		//System.out.println("Error: this edge exists already!");
+                	}
+                	
+                }else{
+                	//when toNode not existing, then add toNode and 1 to the matrix
+                	this.addNode(x.getTo());
+                	index_t = GetNodeIndex(x.getTo());
+                	adjacencyMatrix[index_f][index_t] = 1;
+                	return true;
+                }
+            }else{
+            	//System.out.println("Error: fromNode does not exists or has been removed!");
+            }
         }
-        
         return false;
     }
 
