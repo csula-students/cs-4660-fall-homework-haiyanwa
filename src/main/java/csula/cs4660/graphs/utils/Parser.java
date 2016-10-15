@@ -52,7 +52,7 @@ public class Parser {
                 		count++;
                 		char c1 = line.charAt(i+1);
                 		String tileValue = Character.toString(c) + "" + Character.toString(c1);
-                		Tile tile = new Tile(row,count,tileValue);
+                		Tile tile = new Tile(count,row,tileValue);
                 		Node n = new Node(tile);
                 		nodes.add(n);
                 		graph.addNode(n);
@@ -61,7 +61,7 @@ public class Parser {
                 		count++;
                 		char c1 = line.charAt(i+1);
                 		String tileValue = Character.toString(c) + "" + Character.toString(c1);
-                		Tile tile = new Tile(row,count,tileValue);
+                		Tile tile = new Tile(count,row,tileValue);
                 		Node n = new Node(tile);
                 		nodes.add(n);
                 		graph.addNode(n);
@@ -105,6 +105,7 @@ public class Parser {
                 	Tile ft = (Tile)ed.getFrom().getData();
                 	Tile tt = (Tile)ed.getTo().getData();
                 	int v = ed.getValue();
+                	//System.out.println(ft.getX() + "," + ft.getY() + "->" + tt.getX() + "," + tt.getY() + " " + tt.getType());
                 }
                 row++;
             }
@@ -132,13 +133,13 @@ public class Parser {
     		int y_to = t_to.getY();
     		
     		if(x_from - x_to == -1){
-    			move += "W";
+    			move += "E";
     		}else if(x_from - x_to == 1){
-    			move = "E";
+    			move += "W";
     		}else if(y_from - y_to == -1){
-    			move = "N";
+    			move += "S";
     		}else if(y_from - y_to == 1){
-    			move = "S";
+    			move += "N";
     		}
     	}
     	if(!move.equals("")){
