@@ -47,11 +47,11 @@ public class ObjectOriented implements Representation {
     			nodes.add(fromNode);
         		edges.add(edge);
         	}
-    		//Iterator<Edge> it = edges.iterator();
-    		//System.out.println("Edges:");
-    		//while(it.hasNext()){
-    			//System.out.println("edge: " + it.next());
-    		//}
+    		Iterator<Edge> it = edges.iterator();
+    		System.out.println("Edges:");
+    		while(it.hasNext()){
+    			System.out.println("edge: " + it.next());
+    		}
     		
     	}catch(IOException e){
     		System.out.println(e.getMessage());
@@ -110,7 +110,7 @@ public class ObjectOriented implements Representation {
     public boolean addNode(Node x) {
     	//check if node x exists or not
     	if(nodes.contains(x)){
-    		System.out.println("Error: this node exists already!" + x.toString());
+    		//System.out.println("Error: this node exists already!" + x.toString());
     	}else{
     		nodes.add(x);
     		return true;
@@ -124,7 +124,7 @@ public class ObjectOriented implements Representation {
     	if(nodes.contains(x)){
     		//remove node
     		nodes.remove(x);
-    		System.out.println("removed node" + x.getData());
+    		//System.out.println("removed node" + x.getData());
     		//remove edge
     		Iterator<Edge> iterator = edges.iterator();
     		while(iterator.hasNext()){
@@ -136,7 +136,7 @@ public class ObjectOriented implements Representation {
         	}
     		return true;
     	}else{
-    		System.out.println("Error: this node does not exist!");
+    		//System.out.println("Error: this node does not exist!");
     	}
         return false;
     }
@@ -146,7 +146,7 @@ public class ObjectOriented implements Representation {
     	
     	//from node does not exist then give error
     	if(!nodes.contains(x.getFrom())){
-    		System.out.println("Error: from node does not exist");
+    		//System.out.println("Error: from node does not exist");
     	}else{
     		//if edge exists then reture error
     		Iterator<Edge> itr = edges.iterator();
@@ -171,7 +171,7 @@ public class ObjectOriented implements Representation {
     public boolean removeEdge(Edge x) {
     	//from or to node does not exist then give error
     	if((!nodes.contains(x.getFrom())) || (!nodes.contains(x.getTo()))){
-    		System.out.println("Error: fromNode or toNode not exists");
+    		//System.out.println("Error: fromNode or toNode not exists");
     	}else{
     		//check if edge exists or not, if exists then remove
     		if(edges.remove(x)){
