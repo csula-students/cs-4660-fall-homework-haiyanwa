@@ -20,7 +20,7 @@ import java.util.Scanner;
 public class AdjacencyMatrix implements Representation {
     private Node[] nodes;
     private int[][] adjacencyMatrix;
-
+    
     public AdjacencyMatrix(File file) {
     	try{
     		ArrayList<String> arr = readFile(file);
@@ -97,6 +97,8 @@ public class AdjacencyMatrix implements Representation {
     }
 
     public AdjacencyMatrix() {
+    	nodes = new Node[0];
+		adjacencyMatrix = new int[0][0];
 
     }
     public int GetNodeIndex(Node node){
@@ -160,7 +162,7 @@ public class AdjacencyMatrix implements Representation {
     	}
     	
     	if(node_arr != null){
-    		Collections.sort(node_arr, new Comparator<Node>(){
+    		/**Collections.sort(node_arr, new Comparator<Node>(){
     			@Override
     			public int compare(Node n1, Node n2){
     				//compare by integer instead of string, otherwise node 10 will come first than node 8
@@ -168,7 +170,7 @@ public class AdjacencyMatrix implements Representation {
     				Integer n2_name = Integer.parseInt(n2.getData().toString());
     				return n1_name.compareTo(n2_name);
     			}
-    		});
+    		});*/
     		return node_arr;
     	}
     	
@@ -180,10 +182,15 @@ public class AdjacencyMatrix implements Representation {
     @Override
     public boolean addNode(Node x) {
     	int num = 0;
-    	//new matrix length
-    	if(nodes != null){
+    	//very first node
+    	if(nodes.length < 1){
+    		nodes = new Node[1];
+    	    adjacencyMatrix = new int[1][1];
+    	    nodes[0] = new Node(x.getData());
+    	    adjacencyMatrix[0][0] = 0;
+    	    return true;
+    	}else{
     		num = nodes.length + 1;
-    		System.out.println("add node" +num);
     		//the node is new
     		if(GetNodeIndex(x) == -1){
     			//add x to nodes
@@ -230,17 +237,7 @@ public class AdjacencyMatrix implements Representation {
     			//}
         		return true;
     		}
-    		
-    	//the very first node	
-    	}else{
-    		Node[] nodes = new Node[1];
-    	    int[][] adjacencyMatrix = new int[1][1];
-    	    nodes[0] = new Node(x.getData());
-    	    System.out.println("add node" +1);
-    	    adjacencyMatrix[0][0] = 0;
-    	    return true;
     	}
-    	
         return false;
     }
 
@@ -312,7 +309,10 @@ public class AdjacencyMatrix implements Representation {
     	
         int index_f = GetNodeIndex(x.getFrom());
         int index_t = GetNodeIndex(x.getTo());
+	    
+        //System.out.println("from " + index_f + "to " + index_t);
         if((index_f==-1)||(index_t==-1)){
+        	//System.out.println("cannot add edge " + index_f );
         	return false;
         }else{
         	//check if the fromNode exists or not, if not return error
@@ -322,6 +322,7 @@ public class AdjacencyMatrix implements Representation {
                 if(adjacencyMatrix[index_t] != null){
                 	if(adjacencyMatrix[index_f][index_t] == 0){
                 	    adjacencyMatrix[index_f][index_t] = 1;
+                	    //System.out.println("add edge[" + index_f + "][" + index_t + "]" + "=1" );
                 	    return true;
                 	}else{
                 		//System.out.println("Error: this edge exists already!");

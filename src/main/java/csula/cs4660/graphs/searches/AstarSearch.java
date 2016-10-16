@@ -31,13 +31,10 @@ public class AstarSearch implements SearchStrategy {
     	pri_queue.add(source);
     	distance.put(source,0);
     	visit.put(source, 1);
-    	System.out.print("source ");
-    	printTile(source);
+    	//printTile(source);
 
 		//Tile goal = (Tile) dist.getData();
-		
     	while(!pri_queue.isEmpty()){
-    		
     		//sort queue
     		Collections.sort(pri_queue, new Comparator<Node>(){  //sort by distance
     			@Override
@@ -47,11 +44,12 @@ public class AstarSearch implements SearchStrategy {
     		});
     		
     		Node current = pri_queue.get(0);
+    		//System.out.print("current ");
+        	//printTile(source);
     		if(current.equals(dist)){
     			return find_route(graph,source,dist);
     		}
     		if(graph.neighbors(current) != null){
-    			//System.out.println("Found neibours");
     			for(Node n : graph.neighbors(current)){
     				int ds = distance.get(current) + graph.distance(current, n);  //distance from source
 					int dg = heuristic(n,dist); //to goal
@@ -66,15 +64,18 @@ public class AstarSearch implements SearchStrategy {
     					relation.put(n, current);
     				}
     				if(!visited(n)){
-    					System.out.print("queue Node: ");
-    					printTile(n);
+    					//System.out.print("queue Node: ");
+    					//printTile(n);
         				pri_queue.add(n);
         				visit.put(n, 1);
         			}
     			}
     			//dequeue
-    		    System.out.print("remove: ");
-    		    printTile(current);
+    		    //System.out.print("remove: ");
+    		    //printTile(current);
+    			pri_queue.remove(current);
+    		}else{
+    			//System.out.println("No neighbor found");
     			pri_queue.remove(current);
     		}
     	}
@@ -100,7 +101,7 @@ public class AstarSearch implements SearchStrategy {
     		for(Edge ed : result){
     			Tile f = (Tile)ed.getFrom().getData();
     			Tile t = (Tile)ed.getTo().getData();
-    			System.out.println("from " + f.getX() + "," + f.getY() + " To " + t.getX() + "," + t.getY());
+    			//System.out.println("from " + f.getX() + "," + f.getY() + " To " + t.getX() + "," + t.getY());
     		}
     		return result;
     	}

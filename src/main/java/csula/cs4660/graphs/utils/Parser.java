@@ -26,7 +26,9 @@ public class Parser {
             int row = 0;
             ArrayList<Node> nodes_prev = new ArrayList<>();
             ArrayList<Node> nodes = new ArrayList<>();
+            
             while(read.hasNext()){
+            	
             	if(nodes != null){
             		//copy nodes to nodes_prev
             		nodes_prev.clear();
@@ -56,6 +58,7 @@ public class Parser {
                 		Node n = new Node(tile);
                 		nodes.add(n);
                 		graph.addNode(n);
+                		//System.out.println(count + " " + row + " " + tileValue);
                 		
                 	}else if(c == '@'){  //when it's node's name
                 		count++;
@@ -65,6 +68,7 @@ public class Parser {
                 		Node n = new Node(tile);
                 		nodes.add(n);
                 		graph.addNode(n);
+                		//System.out.println(count + " " + row + " " + tileValue);
                 	}
                 }
                 
@@ -94,7 +98,7 @@ public class Parser {
                 				Edge edge = new Edge(nodes_prev.get(i),nodes.get(i),1);
                 				Edge edge2 = new Edge(nodes.get(i),nodes_prev.get(i),1);
                 				edges.add(edge);
-                        		edges.add(edge2);
+                				edges.add(edge2);
                 			}
                 			
                 		}
@@ -123,6 +127,9 @@ public class Parser {
     public static String converEdgesToAction(Collection<Edge> edges) {
         // TODO: convert a list of edges to a list of action
     	String move = "";
+    	if(edges == null){
+    	    //System.out.println("edges is null");
+    	}
     	for(Edge ed : edges){
     		Tile t_from = (Tile) ed.getFrom().getData();
     		Tile t_to = (Tile) ed.getTo().getData();
