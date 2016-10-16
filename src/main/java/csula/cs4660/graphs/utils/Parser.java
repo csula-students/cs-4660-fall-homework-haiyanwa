@@ -128,7 +128,7 @@ public class Parser {
         // TODO: convert a list of edges to a list of action
     	String move = "";
     	if(edges == null){
-    	    //System.out.println("edges is null");
+    	    System.out.println("edges is null");
     	}
     	for(Edge ed : edges){
     		Tile t_from = (Tile) ed.getFrom().getData();

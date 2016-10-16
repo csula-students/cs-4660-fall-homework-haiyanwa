@@ -32,6 +32,7 @@ public class AstarSearch implements SearchStrategy {
     	distance.put(source,0);
     	visit.put(source, 1);
     	//printTile(source);
+    	int loop =0;
 
 		//Tile goal = (Tile) dist.getData();
     	while(!pri_queue.isEmpty()){
@@ -51,6 +52,8 @@ public class AstarSearch implements SearchStrategy {
     		}
     		if(graph.neighbors(current) != null){
     			for(Node n : graph.neighbors(current)){
+    				//System.out.print("n ");
+    	        	//printTile(n);
     				int ds = distance.get(current) + graph.distance(current, n);  //distance from source
 					int dg = heuristic(n,dist); //to goal
 					int dist_h = ds + dg; //together
@@ -75,7 +78,7 @@ public class AstarSearch implements SearchStrategy {
     		    //printTile(current);
     			pri_queue.remove(current);
     		}else{
-    			//System.out.println("No neighbor found");
+    			System.out.println("No neighbor found");
     			pri_queue.remove(current);
     		}
     	}
