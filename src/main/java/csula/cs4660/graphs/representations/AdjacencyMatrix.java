@@ -162,16 +162,20 @@ public class AdjacencyMatrix implements Representation {
     	}
     	
     	if(node_arr != null){
-    		/**Collections.sort(node_arr, new Comparator<Node>(){
-    			@Override
-    			public int compare(Node n1, Node n2){
-    				//compare by integer instead of string, otherwise node 10 will come first than node 8
-    				Integer n1_name = Integer.parseInt(n1.getData().toString());
-    				Integer n2_name = Integer.parseInt(n2.getData().toString());
-    				return n1_name.compareTo(n2_name);
-    			}
-    		});*/
-    		return node_arr;
+    		try{
+    			Collections.sort(node_arr, new Comparator<Node>(){
+        			@Override
+        			public int compare(Node n1, Node n2){
+        				//compare by integer instead of string, otherwise node 10 will come first than node 8
+        				Integer n1_name = Integer.parseInt(n1.getData().toString());
+        				Integer n2_name = Integer.parseInt(n2.getData().toString());
+        				return n1_name.compareTo(n2_name);
+        			}
+        		});
+    			return node_arr;
+    		}catch(NumberFormatException  e){
+    			return node_arr;
+    		}
     	}
     	
         return null;
