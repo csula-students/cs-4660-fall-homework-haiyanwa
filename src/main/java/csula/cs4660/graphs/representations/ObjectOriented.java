@@ -59,6 +59,8 @@ public class ObjectOriented implements Representation {
     }
 
     public ObjectOriented() {
+    	nodes = new ArrayList<Node>();
+		edges = new ArrayList<Edge>();
 
     }
     //read file into an arraylist of Strings
@@ -109,6 +111,7 @@ public class ObjectOriented implements Representation {
     @Override
     public boolean addNode(Node x) {
     	if(nodes == null){
+    		System.out.println("nodes is null");
     		nodes.add(x);
     		return true;
     	}else{
