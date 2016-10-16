@@ -108,12 +108,17 @@ public class ObjectOriented implements Representation {
 
     @Override
     public boolean addNode(Node x) {
-    	//check if node x exists or not
-    	if(nodes.contains(x)){
-    		//System.out.println("Error: this node exists already!" + x.toString());
-    	}else{
+    	if(nodes == null){
     		nodes.add(x);
     		return true;
+    	}else{
+    		//check if node x exists or not
+        	if(nodes.contains(x)){
+        		//System.out.println("Error: this node exists already!" + x.toString());
+        	}else{
+        		nodes.add(x);
+        		return true;
+        	}
     	}
         return false;
     }
