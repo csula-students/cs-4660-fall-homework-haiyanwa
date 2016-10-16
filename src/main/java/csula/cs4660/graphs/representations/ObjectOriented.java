@@ -48,7 +48,7 @@ public class ObjectOriented implements Representation {
         		edges.add(edge);
         	}
     		Iterator<Edge> it = edges.iterator();
-    		System.out.println("Edges:");
+    		//System.out.println("Edges:");
     		while(it.hasNext()){
     			System.out.println("edge: " + it.next());
     		}
