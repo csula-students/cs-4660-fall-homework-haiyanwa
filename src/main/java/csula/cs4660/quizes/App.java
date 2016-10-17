@@ -66,7 +66,6 @@ public class App {
     	Optional<DTO> opt =  Client.stateTransition(fromId, toId); 
     	if(opt.isPresent()){
     		DTO dto = opt.get();
-    		System.out.println("got DTO");
     		return dto;
     	}
     	return null;
