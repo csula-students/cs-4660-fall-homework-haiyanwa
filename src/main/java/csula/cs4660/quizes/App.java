@@ -4,6 +4,8 @@ import csula.cs4660.quizes.models.DTO;
 import csula.cs4660.quizes.models.Event;
 import csula.cs4660.quizes.models.State;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,6 +20,7 @@ import csula.cs4660.graphs.Edge;
 import csula.cs4660.graphs.Graph;
 import csula.cs4660.graphs.Node;
 import csula.cs4660.graphs.representations.AdjacencyList;
+import csula.cs4660.graphs.representations.AdjacencyMatrix;
 
 /**
  * Here is your quiz entry point and your app
@@ -32,29 +35,15 @@ public class App {
         State initialState = Client.getState("10a5461773e8fd60940a56d2e9ef7bf4").get();
         System.out.println("Initial State: " + initialState);
         // to get an edge between state to its neighbor, you can call stateTransition
-        System.out.println("\ntest " + Client.stateTransition(initialState.getId(), initialState.getNeighbors()[2].getId()));
-        System.out.println("\ntest " + Client.stateTransition(initialState.getId(), initialState.getNeighbors()[3].getId()));
-        
-        /**State state = initialState;
-        String init_id = state.getId();
-        System.out.println(state.getId());
-        System.out.println(state.getLocation());
-        State neighbors[] = state.getNeighbors();
-        for(int i=0;i<neighbors.length;i++){
-        	System.out.println("neighbor: " + neighbors[i].getId());
-        	System.out.println("          " + neighbors[i].getLocation());
-        	
-        	DTO act = getAction(init_id,neighbors[i].getId());
-        	if(act != null){
-        		System.out.println("action: " + act.getAction());
-        		Event evt = act.getEvent();
-        		System.out.println("event: " + evt.getName() + " : " + evt.getEffect());
-        	}
-        	
-        	System.out.println();
-        }*/
         
         List<Edge> result = BFS(startId, distId);
+        
+        if(result == null){
+        	System.out.println("result is null");
+        }else{
+        	System.out.println(result.size());
+        }
+        
         Iterator<Edge> iterator = result.iterator();
     	while(iterator.hasNext()){
     		Edge ed = iterator.next();
@@ -83,7 +72,7 @@ public class App {
     	return null;
     }
     
-    public static boolean visited(Node s, Map visit){
+    public static boolean visited(String s, Map visit){
     	if(visit.get(s) != null){
     		return true;
     	}
@@ -92,62 +81,112 @@ public class App {
     }
     
     public static List<Edge> BFS(String start, String dist){
-    	AdjacencyList graph = new AdjacencyList();
-    	Queue<Node> queue = new LinkedList<Node>();
+    	
+    	Queue<State> queue = new LinkedList<State>();
         List<Edge> result = new ArrayList<>();
-        Map<Node, Integer> visit = new HashMap<>();
+        Map<State, Integer> visit = new HashMap<>();
         
-        Map<Node,Node> relations = new HashMap<>();
-        Map<Node,Integer> distances = new HashMap<>();
-        Map<Node[],Integer> edges = new HashMap<>();
+        Map<State,State> relations = new HashMap<>();
+        Map<State,Integer> distances = new HashMap<>();
+        Map<State[],Integer> edges = new HashMap<>();
         
-        Node endNode= null;
+        State endState= null;
         
         State initState = getState(start);
-        Node initNode = new Node(initState);
-        queue.add(initNode);
-        visit.put(initNode, 1);
-        distances.put(initNode, 0);
-        System.out.println("start " + initState.getId() + " " + initState.getLocation());
+        //Node initNode = new Node(initState);
+        queue.add(initState);
+        visit.put(initState, 1);
+        //distances.put(initNode, 0);
+        System.out.println("start " + initState);
+        int loop = 0;
         
-        while(!queue.isEmpty()){
-        	Node curNode = queue.poll();
-        	State curState = (State)curNode.getData();
-        	State neighbors[] = curState.getNeighbors();
-        	for(int i=0;i<neighbors.length;i++){
-        		State neibState = neighbors[i];
-        		Node neibNode = new Node(neibState);
-        		System.out.println("next state: " + neibState.getId() + " " + neibState.getLocation().getName());
-        		if(!visited(neibNode, visit)){
-        			DTO act = getAction(curState.getId(), neibState.getId());
-        			int dis = 0;
-        			if(act != null){
-        				Event event = act.getEvent();
-        				dis = distances.get(curNode) + event.getEffect();
-        			}else{
-        				dis = distances.get(curNode) + 1;
-        				System.out.println(neibState + "has no effect");
-        			}
-        			distances.put(neibNode,dis);
-        			relations.put(neibNode, curNode);
-        			Node[] pair = {curNode,neibNode};
-        			edges.put(pair, act.getEvent().getEffect());
-        			
-        			if(neibState.getId().equals(distId)){
-        				endNode = neibNode;
-        			}
-        			queue.add(neibNode);
+        try{
+        	PrintWriter writer = new PrintWriter("src/main/java/csula/cs4660/quizes/log", "UTF-8");
+        	
+        	while(!queue.isEmpty()){
+        		if(loop > 50){
+        			break;
         		}
-        	}
-        }
+            	loop++;
+            	writer.print("\nqueue: ");
+            	
+            	for(State n : queue){
+            		
+            		writer.print(n.getId() + " ");
+            	}
+            	writer.println("\n\n");
+            	
+            	State curState = queue.poll();
+            	System.out.println("current state" + curState);
+            	writer.println("current state: " + loop + ": " + curState);
+            	
+            	if(curState.getId().equals(dist)){
+            		endState = curState;
+    				System.out.println("Found current node is endNode!!!!" + dist);
+    				writer.println("Found current node is endNode!!!" + dist);
+    				return getPath(endState,relations,edges);
+            	}
+            	
+            	State neighbors[] = curState.getNeighbors();
+            	for(int i=0;i<neighbors.length;i++){
+            		String nid = neighbors[i].getId();
+            		State nState = getState(nid);
+            		//Node nNode = new Node(nState);
+            		
+            		if(nid.equals(dist)){
+        				endState = nState;
+        				System.out.println("Found end node!!!!" + loop + " "  + dist);
+        				writer.println("Found endNode!!!" + loop + " " + dist);
+        				return getPath(endState,relations,edges);
+        			}
+            		
+            		if(!visited(nState.getId(), visit)){
+            			DTO act = getAction(curState.getId(), nState.getId());
+            			/**int dis = 0;
+            			if(act != null){
+            				Event event = act.getEvent();
+            				dis = distances.get(curNode) + event.getEffect();
+            			}else{
+            				dis = distances.get(curNode) + 1;
+            				System.out.println(neibState + "has no effect");
+            			}*/
+            			
+            			//System.out.println("next state: " + neibState.getId() + " " + neibState.getLocation().getName() + " " + act.getEvent().getEffect());
+            			System.out.println("next state: " + nState);
+            			writer.println("next state: " + loop + ": " + nState);
+            			
+            			//distances.put(nNode,dis);
+            			relations.put(nState, curState);
+            			visit.put(nState, 1);
+            			
+            			State[] pair = {curState,nState};
+            			edges.put(pair, act.getEvent().getEffect());
         
-        while(relations.get(endNode) != null){
-    		Node parent = relations.get(endNode);
-    		Node[] pair = {parent,endNode};
-    		result.add(new Edge(parent, endNode, edges.get(pair)));
+            			queue.add(nState);
+            		}
+            	}
+            }
+        	
+        	writer.close();
+        }catch(IOException e){
+        	System.out.println(e.getMessage());
+        	
+        }
+        return null;
+    }
+    
+    public static List<Edge> getPath(State endState, Map<State,State> relations, Map<State[],Integer> edges){
+    	ArrayList<Edge> result = new ArrayList<>();
+    	
+    	while(relations.get(endState) != null){
+        	System.out.println("endNode relation" + endState);
+    		State parent = relations.get(endState);
+    		State[] pair = {parent,endState};
+    		result.add(new Edge(new Node(parent), new Node(endState), edges.get(pair)));
     		//
-    		endNode = parent;
+    		endState = parent;
     	}
+    	
         if(result != null){
     		
     		Collections.reverse(result);
@@ -157,3 +196,5 @@ public class App {
     	return null;
     }
 }
+
+
