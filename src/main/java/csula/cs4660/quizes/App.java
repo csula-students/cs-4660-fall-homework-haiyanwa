@@ -9,12 +9,14 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.Set;
 
 import csula.cs4660.graphs.Edge;
 import csula.cs4660.graphs.Graph;
@@ -52,9 +54,8 @@ public class App {
     		State sFrom = (State)from.getData();
     		State sTo = (State)to.getData();
     		int cost = ed.getValue();
-    		System.out.println("id: " + sFrom.getId() + "loc: " + sFrom.getLocation() + " cost: "  + cost );
+    		System.out.println("from: " + sFrom.getLocation().getName() + " to: " + sTo.getLocation().getName() + " cost: "  + cost );
     	}
-        
     }
     
     public static State getState(String id){
@@ -83,18 +84,18 @@ public class App {
     	
     	Queue<State> queue = new LinkedList<State>();
         List<Edge> result = new ArrayList<>();
-        Map<State, Integer> visit = new HashMap<>();
+        Set visit = new HashSet<>();
         
         Map<State,State> relations = new HashMap<>();
         Map<State,Integer> distances = new HashMap<>();
-        Map<State[],Integer> edges = new HashMap<>();
+        Map<String,Integer> edges = new HashMap<>();
         
         State endState= null;
         
         State initState = getState(start);
         //Node initNode = new Node(initState);
         queue.add(initState);
-        visit.put(initState, 1);
+        visit.add(initState);
         //distances.put(initNode, 0);
         System.out.println("start " + initState);
         int loop = 0;
@@ -104,24 +105,11 @@ public class App {
         	
         	while(!queue.isEmpty()){
             	loop++;
-            	writer.print("\nqueue: ");
-            	
-            	for(State n : queue){
-            		
-            		writer.print(n.getId() + " ");
-            	}
-            	writer.println("\n\n");
             	
             	State curState = queue.poll();
-            	System.out.println("current state" + curState);
-            	writer.println("current state: " + loop + ": " + curState);
+            	//System.out.println("current state" + curState);
+            	//writer.println("current state: " + loop + ": " + curState);
             	
-            	if(curState.getId().equals(dist)){
-            		endState = curState;
-    				System.out.println("Found current node is endNode!!!!" + dist);
-    				writer.println("Found current node is endNode!!!" + dist);
-    				return getPath(endState,relations,edges);
-            	}
             	
             	State neighbors[] = curState.getNeighbors();
             	for(int i=0;i<neighbors.length;i++){
@@ -129,34 +117,26 @@ public class App {
             		State nState = getState(nid);
             		//Node nNode = new Node(nState);
             		
-            		if(nid.equals(dist)){
-        				endState = nState;
-        				System.out.println("Found end node!!!!" + loop + " "  + dist);
-        				writer.println("Found endNode!!!" + loop + " " + dist);
-        				return getPath(endState,relations,edges);
-        			}
-            		
-            		if(!visited(nState.getId(), visit)){
+            		if(!visit.contains(nState)){
             			DTO act = getAction(curState.getId(), nState.getId());
-            			/**int dis = 0;
-            			if(act != null){
-            				Event event = act.getEvent();
-            				dis = distances.get(curNode) + event.getEffect();
-            			}else{
-            				dis = distances.get(curNode) + 1;
-            				System.out.println(neibState + "has no effect");
-            			}*/
+            			String key = curState.getId() + "" + nState.getId();
+            			edges.put(key, act.getEvent().getEffect());
+            			//System.out.println("add edges: " + act.getEvent().getEffect());
+            			if(nid.equals(dist)){
+            				endState = nState;
+            				System.out.println("Found end node!!!!" + loop + " "  + dist);
+            				//writer.println("Found endNode!!!" + loop + " " + dist);
+            				relations.put(nState, curState);
+            				return getPath(endState,relations,edges);
+            			}
             			
             			//System.out.println("next state: " + neibState.getId() + " " + neibState.getLocation().getName() + " " + act.getEvent().getEffect());
-            			System.out.println("next state: " + nState);
-            			writer.println("next state: " + loop + ": " + nState);
+            			//System.out.println("next state: " + nState);
+            			//writer.println("next state: " + loop + ": " + nState);
             			
             			//distances.put(nNode,dis);
             			relations.put(nState, curState);
-            			visit.put(nState, 1);
-            			
-            			State[] pair = {curState,nState};
-            			edges.put(pair, act.getEvent().getEffect());
+            			visit.add(nState);
         
             			queue.add(nState);
             		}
@@ -171,14 +151,22 @@ public class App {
         return null;
     }
     
-    public static List<Edge> getPath(State endState, Map<State,State> relations, Map<State[],Integer> edges){
+    public static List<Edge> getPath(State endState, Map<State,State> relations, Map<String,Integer> edges){
     	ArrayList<Edge> result = new ArrayList<>();
     	
+    	System.out.println("endState " + endState);
     	while(relations.get(endState) != null){
         	System.out.println("endNode relation" + endState);
     		State parent = relations.get(endState);
-    		State[] pair = {parent,endState};
-    		result.add(new Edge(new Node(parent), new Node(endState), edges.get(pair)));
+    		System.out.println("parent " + parent);
+    		String key = parent.getId()+ "" + endState.getId();
+    		int cost=999;
+    		if(edges.containsKey(key)){
+    			cost = edges.get(key);
+    		}else{
+    			System.out.println("edges is null");
+    		}
+    		result.add(new Edge(new Node(parent), new Node(endState), cost));
     		//
     		endState = parent;
     	}
