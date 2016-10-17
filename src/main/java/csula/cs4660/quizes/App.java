@@ -104,9 +104,6 @@ public class App {
         	PrintWriter writer = new PrintWriter("src/main/java/csula/cs4660/quizes/log", "UTF-8");
         	
         	while(!queue.isEmpty()){
-        		if(loop > 50){
-        			break;
-        		}
             	loop++;
             	writer.print("\nqueue: ");
             	
