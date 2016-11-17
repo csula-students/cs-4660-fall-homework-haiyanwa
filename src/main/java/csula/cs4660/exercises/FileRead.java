@@ -69,7 +69,6 @@ public class FileRead {
         for (int i : numbers[lineNumber]) {
             sum += i;
         }
-
         return sum;
     }
 

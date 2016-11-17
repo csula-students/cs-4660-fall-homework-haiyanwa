@@ -1,5 +1,6 @@
-.idea/
-.gradle/
-build/
-build.gradle
-.DS_Store
+/.idea/
+/.gradle/
+/build/
+/build.gradle
+/.DS_Store
+/TestAstar.java
